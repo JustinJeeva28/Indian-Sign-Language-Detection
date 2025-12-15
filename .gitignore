@@ -1,6 +1,51 @@
+# ============================================================================
+# Dataset and Image Directories (exclude large files)
+# ============================================================================
+# Training datasets
+data/
+extracted_isl_words/
+pov data/
+pov\ data/
+"Indian sign Language-Real-life Words/"
+"Indian sign Language-Real-life Words.zip"
 
-#images
+# Image directories
 images/
+paper/*.png
+paper/*.jpg
+paper/*.jpeg
+
+# Large CSV files (processed datasets can be very large)
+*.csv
+
+# Archive files
+*.rar
+*.zip
+*.tar
+*.tar.gz
+data.rar
+sample_dataset.zip
+archive.zip
+"Indian sign Language-Real-life Words.zip"
+
+# Keep paper source files but exclude images
+!paper/*.tex
+!paper/*.pdf
+!paper/idea.txt
+
+# Keep small config/example CSVs if needed (uncomment to exclude all CSVs)
+# working/improved_keypoint.csv
+# imporved/improved_keypoint.csv
+
+# ============================================================================
+# Models (keep trained models)
+# ============================================================================
+# Keep model files - uncomment if you want to exclude them too
+# *.pth
+# *.h5
+# *.pkl
+# *.pt
+# *.ckpt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

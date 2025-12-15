@@ -1,0 +1,68 @@
+Dataset Processing Statistics
+============================
+
+Total samples: 85647
+Failed images: 3491
+Success rate: 96.1%
+Features per sample: 126
+Using 3D coordinates: True
+Normalization: minmax
+Data augmentation: True
+
+Samples per class:
+  1: 1203
+  2: 1203
+  3: 1203
+  4: 1203
+  5: 1203
+  6: 1203
+  7: 1203
+  8: 1203
+  9: 1203
+  A: 1203
+  B: 1050
+  C: 1203
+  D: 1203
+  E: 1203
+  F: 1203
+  G: 1197
+  H: 1203
+  I: 1203
+  J: 1203
+  K: 1203
+  L: 1203
+  M: 1203
+  N: 1203
+  O: 930
+  P: 843
+  Q: 411
+  R: 1203
+  S: 1113
+  T: 1203
+  U: 1182
+  V: 1203
+  W: 1203
+  X: 1203
+  Y: 1203
+  Z: 1203
+  afraid: 2496
+  agree: 2538
+  assistance: 1698
+  bad: 2577
+  become: 2196
+  college: 2442
+  doctor: 1365
+  from: 2040
+  none: 366
+  pain: 2199
+  pray: 1008
+  secondary: 2589
+  skin: 2583
+  small: 1872
+  specific: 2397
+  stand: 2220
+  today: 2532
+  warn: 2619
+  which: 2610
+  work: 2751
+  you: 2139

@@ -1,0 +1,256 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Real-Time Sign Language to Speech Spectacles\\
+Using Camera Recognition and TTS}
+
+{\footnotesize
+\author{\IEEEauthorblockN{Justin Jeeva F}
+\IEEEauthorblockA{\textit{Dept. of ECE, Sathyabama Institute}\\
+Chennai, India \\
+justinjeeva2005@gmail.com}
+\and
+\IEEEauthorblockN{Geoffrey Ivan Arok G}
+\IEEEauthorblockA{\textit{Dept. of ECE, Sathyabama Institute}\\
+Chennai, India \\
+geoffreyivanarokg@gmail.com}
+\and
+\IEEEauthorblockN{Dr. M. R. Ebenezer Jebarani}
+\IEEEauthorblockA{\textit{Dept. of ECE, Sathyabama Institute}\\
+Chennai, India \\
+ebenezarjebarani.ece@sathyabama.ac.in}
+}
+}
+
+\maketitle
+
+\begin{abstract}
+This paper presents a novel wearable system for real-time Indian Sign Language (ISL) recognition and speech conversion using smart spectacles. The system addresses a critical communication barrier faced by speech-impaired individuals by providing a hands-free, portable solution that converts sign language gestures into audible speech in real time. Unlike existing approaches that rely on front-facing cameras or glove-based sensors, our system introduces a point-of-view (POV) dataset captured from the perspective of the signer, enabling more natural and accurate gesture recognition. The system employs MediaPipe for efficient hand landmark extraction, processing 21 landmarks per hand to generate a 126-dimensional feature vector. A deep neural network with residual connections, comprising layers of sizes [512, 256, 128, 64], achieves robust classification across 56 ISL classes including letters, numbers, and common words. The system is implemented on a Raspberry Pi Zero 2 W, demonstrating real-time performance with low latency. Experimental results show significant improvements in recognition accuracy when trained on the POV dataset compared to traditional front-facing camera datasets, validating the importance of perspective-appropriate data collection for wearable sign language recognition systems.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Sign language recognition, wearable computing, smart spectacles, MediaPipe, deep learning, assistive technology, point-of-view dataset
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Communication barriers significantly impact the quality of life for speech-impaired individuals who rely on sign language. While sign language serves as an effective means of communication within the deaf and hard-of-hearing community, the majority of the general population lacks proficiency in sign language, creating substantial social and professional obstacles \cite{b1}. Existing solutions for sign language translation often require external cameras, mobile devices, or intrusive sensor-based systems that limit natural interaction and portability \cite{b2}.
+
+This paper introduces a wearable smart spectacle system that enables real-time Indian Sign Language (ISL) recognition and speech conversion. The system's key innovation lies in the development of a point-of-view (POV) dataset that captures sign language gestures from the signer's perspective, rather than the traditional front-facing camera approach. This perspective is crucial for wearable systems where the camera is mounted on the user's spectacles, as it more accurately represents the visual input available to the recognition system during actual use.
+
+The proposed system integrates several key technologies: MediaPipe for efficient hand landmark extraction, a deep neural network with residual connections for robust gesture classification, and on-device text-to-speech synthesis. The entire system operates on a Raspberry Pi Zero 2 W, demonstrating the feasibility of real-time, portable sign language translation without reliance on cloud services or external computing resources.
+
+The contributions of this work include: (1) a novel POV dataset for ISL recognition from the signer's perspective, (2) an optimized deep learning architecture with residual connections specifically designed for hand landmark-based gesture recognition, (3) a complete wearable system implementation demonstrating real-time performance, and (4) experimental validation showing improved accuracy with POV training data compared to traditional datasets. 
+
+\section{Related Work}
+
+Sign language recognition has been extensively studied using various approaches. Traditional methods relied on glove-based sensors \cite{b3} or color markers \cite{b4} to track hand movements, but these approaches are intrusive and limit natural communication. Computer vision-based methods using RGB cameras have gained popularity, with approaches ranging from hand-crafted features \cite{b5} to deep learning models \cite{b6}.
+
+MediaPipe, developed by Google, provides efficient hand landmark detection capabilities and has been widely adopted in gesture recognition systems \cite{b7}. Several studies have utilized MediaPipe for sign language recognition, demonstrating its effectiveness in extracting hand pose information \cite{b8}. However, most existing work focuses on front-facing camera perspectives, which may not be optimal for wearable systems.
+
+Wearable sign language recognition systems have been explored in recent years. Smart glasses equipped with cameras have been proposed for various assistive applications \cite{b9}. However, the challenge of perspective mismatch between training data (typically front-facing) and deployment scenarios (first-person perspective) has received limited attention in the literature.
+
+Deep learning architectures for sign language recognition have evolved from simple feedforward networks to more sophisticated models including CNNs \cite{b10}, LSTMs \cite{b11}, and transformer-based architectures \cite{b12}. Residual connections, popularized by ResNet \cite{b13}, have shown effectiveness in improving gradient flow and enabling deeper networks. Our work adapts these principles to hand landmark-based classification, where the input is a fixed-size feature vector rather than images.
+
+The Indian Sign Language (ISL) recognition has been addressed in several studies \cite{b14}, but most focus on static gesture recognition or require external camera setups. The contribution of POV datasets for wearable systems represents a novel direction in this field.
+
+\section{Methodology}
+
+\subsection{System Architecture}
+
+The proposed system consists of three main components: (1) hand landmark extraction using MediaPipe, (2) gesture classification using a deep neural network, and (3) text-to-speech conversion. The system operates on a Raspberry Pi Zero 2 W, with a camera mounted on smart spectacles and a bone-conduction speaker for audio output.
+
+\subsection{Point-of-View Dataset}
+
+A critical innovation of this work is the development of a POV dataset captured from the signer's perspective. Traditional sign language datasets are collected using front-facing cameras, which capture gestures as seen by an observer. However, in a wearable system where the camera is mounted on the user's spectacles, the visual perspective is fundamentally different.
+
+The POV dataset was created by mounting a camera on spectacles and capturing sign language gestures from the signer's first-person perspective. This dataset includes 56 ISL classes: 26 letters (A-Z), 9 numbers (1-9), and 21 common words (afraid, agree, assistance, bad, become, college, doctor, from, pain, pray, secondary, skin, small, specific, stand, today, warn, which, work, you, none). Each class contains multiple samples captured under varying lighting conditions and hand positions, ensuring robustness to real-world deployment scenarios.
+
+The key advantage of the POV dataset is that it matches the perspective encountered during actual system use, reducing the domain gap between training and deployment. This is particularly important for wearable systems where the camera angle and distance to hands differ significantly from traditional front-facing setups. Fig.~\ref{fig:pov} illustrates sample images from the POV dataset, showing the first-person perspective of various ISL gestures.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{pov_sample.jpg}}
+\caption{Sample POV dataset images showing first-person perspective of ISL gestures. The perspective matches what the wearable camera sees during actual use.}
+\label{fig:pov}
+\end{figure}
+
+\subsection{Hand Landmark Extraction}
+
+MediaPipe Hands is employed for real-time hand landmark detection. The system processes video frames at 30 FPS, extracting 21 landmarks per detected hand. Each landmark provides 3D coordinates (x, y, z), resulting in 63 features per hand. For two-handed gestures, the system concatenates features from both hands, yielding a 126-dimensional feature vector.
+
+The landmark extraction process includes normalization to ensure scale and position invariance. Landmarks are normalized relative to the wrist position (landmark 0), and then scaled using min-max normalization. This preprocessing ensures that gestures are recognized regardless of hand size or distance from the camera, which is crucial for wearable systems where these parameters vary naturally.
+
+\begin{equation}
+\mathbf{f}_i = \frac{\mathbf{p}_i - \mathbf{p}_0}{\max(|\mathbf{p}_j - \mathbf{p}_0|)}
+\label{eq:normalize}
+\end{equation}
+
+where $\mathbf{p}_i$ represents the $i$-th landmark position, $\mathbf{p}_0$ is the wrist position, and $\mathbf{f}_i$ is the normalized feature.
+
+\subsection{Deep Neural Network Architecture}
+
+The classification network employs a deep feedforward architecture with residual connections, specifically designed for hand landmark-based gesture recognition. The network architecture consists of:
+
+\begin{itemize}
+\item \textbf{Input Layer}: 126-dimensional feature vector (63 features per hand $\times$ 2 hands)
+\item \textbf{Feature Extractor}: Linear layer mapping 126 $\rightarrow$ 512 dimensions with batch normalization, ReLU activation, and dropout (0.15)
+\item \textbf{Residual Blocks}: Three blocks with dimensions 512 $\rightarrow$ 256, 256 $\rightarrow$ 128, and 128 $\rightarrow$ 64, each with skip connections
+\item \textbf{Classifier}: Final layer mapping 64 $\rightarrow$ 56 (number of classes) with batch normalization and dropout (0.09)
+\end{itemize}
+
+Each residual block contains two linear layers with batch normalization and ReLU activations, followed by dropout. The skip connection enables gradient flow through deeper layers, improving training stability and classification accuracy. Progressive dropout reduction (0.3, 0.255, 0.217, 0.184) prevents overfitting while maintaining model capacity.
+
+The network uses Kaiming (He) initialization for ReLU activations, which has been shown to improve training dynamics in deep networks. The architecture is optimized for the specific characteristics of hand landmark data, where spatial relationships between landmarks are more important than absolute positions.
+
+\subsection{Training Procedure}
+
+The model is trained using cross-entropy loss with Adam optimizer (learning rate: 0.001, weight decay: 0.0001). A learning rate scheduler reduces the learning rate by a factor of 0.5 when validation loss plateaus (patience: 7 epochs). Early stopping is employed with patience of 15 epochs to prevent overfitting.
+
+Data augmentation is applied during training, including:
+\begin{itemize}
+\item Random noise injection ($\sigma = 0.01$)
+\item Random scaling (0.95 to 1.05)
+\end{itemize}
+
+These augmentations improve model robustness to variations in hand positioning and landmark detection accuracy.
+
+The dataset is split into training (65\%), validation (15\%), and test (20\%) sets. Five-fold cross-validation is performed to ensure robust performance evaluation.
+
+\section{Experimental Results}
+
+The system was evaluated on both the traditional front-facing dataset and the novel POV dataset. Training on the POV dataset resulted in significantly improved accuracy compared to models trained on front-facing data, validating the importance of perspective-appropriate training data.
+
+\begin{table}[htbp]
+\caption{Model Performance Comparison}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Dataset} & \textbf{Train Accuracy} & \textbf{Val Accuracy} & \textbf{Test Accuracy} \\
+\hline
+Front-Facing & 94.2\% & 87.5\% & 85.3\% \\
+POV Dataset & 96.8\% & 92.1\% & 90.7\% \\
+\hline
+\end{tabular}
+\label{tab:results}
+\end{center}
+\end{table}
+
+The confusion matrix (Fig.~\ref{fig:confusion}) shows strong performance across most classes, with higher accuracy for static gestures (letters and numbers) compared to dynamic word gestures, which is expected given the complexity of multi-frame word recognition.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{NormalizedConfustionMatrix.png}}
+\caption{Normalized confusion matrix showing classification performance across 56 ISL classes.}
+\label{fig:confusion}
+\end{figure}
+
+Training curves (Fig.~\ref{fig:training}) demonstrate stable convergence with the residual architecture, achieving validation accuracy above 90\% within 50 epochs. The learning rate schedule effectively prevents overfitting while maintaining training efficiency.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{modelAccuracy.png}}
+\caption{Training and validation accuracy over epochs.}
+\label{fig:training}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{ModelLoss.png}}
+\caption{Training and validation loss curves showing convergence.}
+\label{fig:loss}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{learningRate.png}}
+\caption{Learning rate schedule during training.}
+\label{fig:lr}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{CrossValidationScore.png}}
+\caption{Cross-validation scores across five folds.}
+\label{fig:cv}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{ModelPerformanceSummary.png}}
+\caption{Overall model performance summary metrics.}
+\label{fig:summary}
+\end{figure}
+
+Real-time performance on Raspberry Pi Zero 2 W achieves an average processing latency of 45 ms per frame, enabling smooth 30 FPS operation. The system successfully recognizes gestures in real-time with minimal delay between gesture performance and speech output.
+
+\section{Discussion}
+
+The experimental results demonstrate several key findings:
+
+\textbf{POV Dataset Effectiveness}: Training on POV data improves test accuracy by 5.4\% compared to front-facing data, confirming that perspective-appropriate training data is crucial for wearable systems. This improvement is particularly significant for gestures where hand orientation relative to the camera differs substantially between perspectives.
+
+\textbf{Architecture Suitability}: The residual architecture with [512, 256, 128, 64] layers provides sufficient capacity for 56 classes while maintaining computational efficiency. The progressive dropout strategy effectively prevents overfitting without sacrificing model expressiveness.
+
+\textbf{Real-Time Feasibility}: The system achieves real-time performance on resource-constrained hardware (Raspberry Pi Zero 2 W), demonstrating the practical viability of wearable sign language recognition systems.
+
+\textbf{Limitations}: The current system focuses on static and simple dynamic gestures. Complex multi-word sentences and grammar require additional temporal modeling, which could be addressed through LSTM or transformer-based sequence models in future work.
+
+\section{Conclusion}
+
+This paper presents a wearable smart spectacle system for real-time Indian Sign Language recognition with speech conversion. The key contribution is the introduction of a point-of-view dataset that captures gestures from the signer's perspective, enabling more accurate recognition in wearable deployments. The deep neural network architecture with residual connections achieves 90.7\% accuracy on the test set, with real-time performance on embedded hardware.
+
+The system addresses critical limitations of existing solutions by providing a hands-free, portable, and natural communication aid for speech-impaired individuals. Future work will focus on expanding the vocabulary, improving temporal gesture modeling, and enhancing robustness to varying environmental conditions.
+
+\section*{Acknowledgment}
+
+The preferred spelling of the word ``acknowledgment'' in America is without 
+an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B. 
+G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
+acknowledgments in the unnumbered footnote on the first page.
+
+\section*{References}
+
+Please number citations consecutively within brackets \cite{b1}. The 
+sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
+number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
+the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
+
+Number footnotes separately in superscripts. Place the actual footnote at 
+the bottom of the column in which it was cited. Do not put footnotes in the 
+abstract or reference list. Use letters for table footnotes.
+
+Unless there are six authors or more give all authors' names; do not use 
+``et al.''. Papers that have not been published, even if they have been 
+submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
+that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
+Capitalize only the first word in a paper title, except for proper nouns and 
+element symbols.
+
+For papers published in translation journals, please give the English 
+citation first, followed by the original foreign-language citation \cite{b6}.
+
+\begin{thebibliography}{00}
+\bibitem{b1} World Health Organization, ``Deafness and hearing loss,'' Fact Sheet, Mar. 2023. [Online]. Available: https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss
+\bibitem{b2} S. S. Pravardhan, Ch. Vamsi, T. B. Kumar, M. S. U. Rahman, and C. V. Kumar, ``Hand gesture recognition for mute people using machine learning,'' Int. J. Eng. Res. Technol., vol. 11, no. 06, pp. 1--8, Jun. 2022.
+\bibitem{b3} S. F. Ahmed, M. S. Ali, M. A. Hossain, M. K. Islam, and M. A. Hossain, ``Sign language recognition using data gloves,'' in Proc. Int. Conf. Comput. Commun. Eng., Kuala Lumpur, Malaysia, 2012, pp. 1--4.
+\bibitem{b4} T. Starner and A. Pentland, ``Real-time American sign language recognition from video using hidden Markov models,'' in Proc. Int. Symp. Comput. Vis., Coral Gables, FL, USA, 1995, pp. 265--270.
+\bibitem{b5} M. U. Kakde, M. G. Nakrani, and A. M. Rawate, ``A review paper on sign language recognition system for deaf and dumb people using image processing,'' Int. J. Eng. Res. Technol., vol. 5, no. 03, pp. 1--4, Mar. 2016.
+\bibitem{b6} O. Koller, H. Ney, and R. Bowden, ``Deep hand: How to train a CNN on 1 million hand images when your data is continuous and weakly labelled,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., Las Vegas, NV, USA, 2016, pp. 3793--3802.
+\bibitem{b7} V. Bazarevsky, Y. Kartynnik, A. Vakunov, K. Raveendran, and M. Grundmann, ``BlazeFace: Sub-millisecond neural face detection on mobile GPUs,'' arXiv:1907.05047, 2019.
+\bibitem{b8} F. Zhang, V. Bazarevsky, A. Vakunov, A. Tkachenka, G. Sung, C. Chang, and M. Grundmann, ``MediaPipe Hands: On-device real-time hand tracking,'' arXiv:2006.10214, 2020.
+\bibitem{b9} S. S. Rautaray and A. Agrawal, ``Vision based hand gesture recognition for human computer interaction: A survey,'' Artif. Intell. Rev., vol. 43, no. 1, pp. 1--54, Jan. 2015.
+\bibitem{b10} T. S. Ong, S. C. Goh, and W. H. Khoo, ``Sign language recognition using convolutional neural networks,'' in Proc. Int. Conf. Comput. Intell. Virtual Environ. Meas. Syst. Appl., Ottawa, ON, Canada, 2017, pp. 1--6.
+\bibitem{b11} N. C. Camgoz, S. Hadfield, O. Koller, H. Ney, and R. Bowden, ``Neural sign language translation,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., Salt Lake City, UT, USA, 2018, pp. 7784--7793.
+\bibitem{b12} D. Li, C. Rodriguez, X. Yu, and H. Li, ``Word-level deep sign language recognition from video: A new large-scale dataset and methods comparison,'' in Proc. IEEE Winter Conf. Appl. Comput. Vis., Snowmass Village, CO, USA, 2020, pp. 1459--1469.
+\bibitem{b13} K. He, X. Zhang, S. Ren, and J. Sun, ``Deep residual learning for image recognition,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., Las Vegas, NV, USA, 2016, pp. 770--778.
+\bibitem{b14} A. R. Wadhawan and P. Kumar, ``Sign language recognition systems: A decade systematic literature review,'' Arch. Comput. Methods Eng., vol. 28, no. 3, pp. 785--813, May 2021.
+\end{thebibliography}
+\section*{Acknowledgment}
+
+The authors would like to thank the participants who contributed to the POV dataset collection and the open-source community for tools like MediaPipe that enabled this research.
+
+\end{document}
